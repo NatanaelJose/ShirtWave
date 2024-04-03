@@ -3,6 +3,7 @@
 import NavBar from "@/app/ui/Home/NavBar";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from 'react'
 
 interface Shirt {
   id: string;
@@ -17,6 +18,8 @@ export default function Home() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
   const searchParams = useSearchParams();
   const search = searchParams.get("camisa");
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     if (search) {
@@ -88,10 +91,14 @@ export default function Home() {
           }
         } catch (error) {
           console.error("Erro ao buscar dados:", error);
+        } finally {
+          setLoading(false);
         }
       };
 
       fetchData();
+    } else {
+      setLoading(false); // se não houver parâmetro de pesquisa, pare de carregar
     }
   }, [search]);
 
@@ -106,38 +113,50 @@ export default function Home() {
         <div className="container mx-auto p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-1">
-              <img
-                src={shirt.image_url}
-                alt={shirt.name}
-                className="w-full h-auto rounded-lg shadow-lg"
-              />
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <Suspense fallback={<div>Loading...</div>}>
+                  {shirt && (
+                    <img
+                      src={shirt.image_url}
+                      alt={shirt.name}
+                      className="w-full h-auto rounded-lg shadow-lg"
+                    />
+                  )}
+                </Suspense>
+              )}
             </div>
             <div className="md:col-span-1 flex flex-col justify-center w-full md:w-4/6">
-              <h2 className="text-3xl font-semibold mb-4">{shirt.name}</h2>
-              <p className="text-xl mb-2">Preço: ${shirt.price}</p>
-              <p className="text-xl mb-2">Tamanhos disponíveis:</p>
-              <select className="border rounded-md px-2 py-1 mb-2 md:mb-0">
-                <option value="">Selecione o tamanho</option>
-                {shirt.sizes.map((size, index) => (
-                  <option key={index} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xl mb-2">Cores:</p>
-              <div className="flex flex-row items-center mb-2">
-                {shirt.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className={`w-8 h-8 mr-2 rounded-full border bg-${
-                      color === "black" ? "black" : color.toLowerCase() + "-500"
-                    }`}
-                  ></div>
-                ))}
-              </div>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300">
-                Adicionar ao Carrinho
-              </button>
+              {!loading && shirt && (
+                <>
+                  <h2 className="text-3xl font-semibold mb-4">{shirt.name}</h2>
+                  <p className="text-xl mb-2">Preço: ${shirt.price}</p>
+                  <p className="text-xl mb-2">Tamanhos disponíveis:</p>
+                  <select className="border rounded-md px-2 py-1 mb-2 md:mb-0">
+                    <option value="">Selecione o tamanho</option>
+                    {shirt.sizes.map((size, index) => (
+                      <option key={index} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xl mb-2">Cores:</p>
+                  <div className="flex flex-row items-center mb-2">
+                    {shirt.colors.map((color, index) => (
+                      <div
+                        key={index}
+                        className={`w-8 h-8 mr-2 rounded-full border bg-${
+                          color === "black" ? "black" : color.toLowerCase() + "-500"
+                        }`}
+                      ></div>
+                    ))}
+                  </div>
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300">
+                    Adicionar ao Carrinho
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
