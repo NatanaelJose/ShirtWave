@@ -13,16 +13,22 @@ interface Shirt {
   colors: string[];
 }
 
-// Hook personalizado para buscar a camisa com base no parâmetro da URL
-function useShirtSearch() {
+// Componente de suspense personalizado para envolver useSearchParams
+const SearchParamsSuspense: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const searchParams = useSearchParams();
+  return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
+};
+
+export default function Home() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const search = searchParams.get("camisa");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const searchParams = useSearchParams();
+        const search = searchParams.get("camisa");
+
         if (search) {
           const shirtsData = [
             {
@@ -99,13 +105,7 @@ function useShirtSearch() {
     };
 
     fetchData();
-  }, [search]);
-
-  return { shirt, loading };
-}
-
-export default function Home() {
-  const { shirt, loading } = useShirtSearch();
+  }, []);
 
   return (
     <div>
@@ -117,7 +117,7 @@ export default function Home() {
               {loading ? (
                 <div>Loading...</div>
               ) : (
-                <Suspense fallback={<div>Loading...</div>}>
+                <SearchParamsSuspense>
                   {shirt && (
                     <img
                       src={shirt.image_url}
@@ -125,7 +125,7 @@ export default function Home() {
                       className="w-full h-auto rounded-lg shadow-lg"
                     />
                   )}
-                </Suspense>
+                </SearchParamsSuspense>
               )}
             </div>
             <div className="md:col-span-1 flex flex-col justify-center w-full md:w-4/6">
