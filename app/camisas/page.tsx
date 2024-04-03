@@ -2,6 +2,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation'
 import NavBar from "@/app/ui/Home/NavBar";
+import Image from 'next/image';
+
 
 // Componente de Carregamento
 function Loading() {
@@ -102,7 +104,7 @@ function DetailPage() {
         <div className="container mx-auto p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-1">
-              <img src={shirt.image_url} alt={shirt.name} className="w-full h-auto rounded-lg shadow-lg" />
+              <Image src={shirt.image_url} alt={shirt.name} className="w-full h-auto rounded-lg shadow-lg" />
             </div>
             <div className="md:col-span-1 flex flex-col justify-center w-5/6">
               <h2 className="text-3xl font-semibold mb-4">{shirt.name}</h2>
