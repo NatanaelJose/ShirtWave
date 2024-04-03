@@ -16,15 +16,16 @@ interface Shirt {
 
 export default function Home() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
-  const searchParams = useSearchParams();
-  const search = searchParams.get("camisa");
   const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
-    if (search) {
-      const fetchData = async () => {
-        try {
+    const fetchData = async () => {
+      try {
+        const searchParams = useSearchParams();
+        const search = searchParams.get("camisa");
+        
+        if (search) {
           const shirtsData = [
             {
               id: "a990c051-62bd-4b76-96e9-c6057c8cc8e1",
@@ -81,26 +82,26 @@ export default function Home() {
               colors: ["red"],
             },
           ];
-
+          
           const selectedShirt = shirtsData.find((shirt) => shirt.id === search);
-
+          
           if (selectedShirt) {
             setShirt(selectedShirt);
           } else {
             console.error("Camisa não encontrada");
           }
-        } catch (error) {
-          console.error("Erro ao buscar dados:", error);
-        } finally {
-          setLoading(false);
+        } else {
+          console.error("Parâmetro de pesquisa 'camisa' ausente");
         }
-      };
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchData();
-    } else {
-      setLoading(false); // se não houver parâmetro de pesquisa, pare de carregar
-    }
-  }, [search]);
+    fetchData();
+  }, []);
 
   if (!shirt) {
     return <div>Loading...</div>;
