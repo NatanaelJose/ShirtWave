@@ -122,7 +122,7 @@ function DetailPage() {
               <p className="text-xl mb-2">Cores:</p>
               <div className="flex items-center mb-2">
                 {shirt.colors.map((color, index) => (
-                  <div key={index} className={`w-8 h-8 mr-2 rounded-full border bg-${color === 'black' ? 'black' : color.toLowerCase()+"-500"}`}></div>
+                  <div key={index} className={`w-8 h-8 mr-2 rounded-full border ${color === 'black' ? 'bg-black' : "bg-"+color.toLowerCase()+"-500"}`}></div>
                 ))}                
               </div>
               <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300">
