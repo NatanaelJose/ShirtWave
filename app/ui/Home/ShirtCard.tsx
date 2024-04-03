@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Link from 'next/link';
+import Link from "next/link";
 
 interface Shirt {
-  id: number;
+  id: string;
   name: string;
   image_url: string;
   price: number;
@@ -34,7 +34,10 @@ export default function ShirtCard({ shirt }: ShirtCardProps) {
           <button className="bg-blue-500 text-white rounded-md px-3 py-1 mr-2 hover:bg-blue-600 transition-colors duration-300">
             Adicionar ao Carrinho
           </button>
-          <Link href={`/${shirt.id}`} className="bg-gray-200 text-gray-800 flex items-center rounded-md px-3 py-1 hover:bg-gray-300 transition-colors duration-300">
+          <Link
+            href={`/camisas?camisa=${shirt.id}`}
+            className="bg-gray-200 text-gray-800 flex items-center rounded-md px-3 py-1 hover:bg-gray-300 transition-colors duration-300"
+          >
             Detalhes
           </Link>
         </div>
