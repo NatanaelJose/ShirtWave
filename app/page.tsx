@@ -40,7 +40,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center mt-2 p-4">
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <Filters />
+            <Filters  shirtsData={shirtsData} setShirtsData={setShirtsData} />
             <div className="md:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {shirtsData.map((shirt) => (

@@ -4,7 +4,7 @@ module.exports = {
   shirts: [
     {
       id: uuidv4(), 
-      name: 'Camisa Azul',
+      name: 'Camisa Azul com bolinhas',
       price: 25.99,
       sizes: ['S', 'M', 'L', 'XL'],
       colors: ['Azul'],

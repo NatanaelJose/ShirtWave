@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link';
 
 interface Shirt {
   id: number;
@@ -20,20 +21,22 @@ export default function ShirtCard({ shirt }: ShirtCardProps) {
         <Image
           src={shirt.image_url}
           alt={shirt.name}
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, (max-width: 1024px) 1024px, 100vw"
+          priority
         />
       </div>
       <div className="text-center mt-4">
         <h2 className="text-xl font-semibold">{shirt.name}</h2>
         <p className="text-gray-600">${shirt.price}</p>
         <div className="flex justify-center mt-2">
-          <button className="bg-blue-500 text-white rounded-md px-4 py-2 mr-2 hover:bg-blue-600">
+          <button className="bg-blue-500 text-white rounded-md px-3 py-1 mr-2 hover:bg-blue-600 transition-colors duration-300">
             Adicionar ao Carrinho
           </button>
-          <button className="bg-gray-200 text-gray-800 rounded-md px-4 py-2 hover:bg-gray-300">
+          <Link href={`/${shirt.id}`} className="bg-gray-200 text-gray-800 flex items-center rounded-md px-3 py-1 hover:bg-gray-300 transition-colors duration-300">
             Detalhes
-          </button>
+          </Link>
         </div>
       </div>
     </div>
