@@ -1,5 +1,4 @@
 "use client";
-
 import NavBar from "@/app/ui/Home/NavBar";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -14,17 +13,16 @@ interface Shirt {
   colors: string[];
 }
 
-export default function Home() {
+// Hook personalizado para buscar a camisa com base no parâmetro da URL
+function useShirtSearch() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const search = searchParams.get("camisa");
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
         if (search) {
           const shirtsData = [
             {
@@ -82,9 +80,9 @@ export default function Home() {
               colors: ["red"],
             },
           ];
-          
+
           const selectedShirt = shirtsData.find((shirt) => shirt.id === search);
-          
+
           if (selectedShirt) {
             setShirt(selectedShirt);
           } else {
@@ -101,11 +99,13 @@ export default function Home() {
     };
 
     fetchData();
-  }, []);
+  }, [search]);
 
-  if (!shirt) {
-    return <div>Loading...</div>;
-  }
+  return { shirt, loading };
+}
+
+export default function Home() {
+  const { shirt, loading } = useShirtSearch();
 
   return (
     <div>
