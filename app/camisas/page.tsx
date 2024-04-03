@@ -1,20 +1,22 @@
 "use client"
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 import NavBar from "@/app/ui/Home/NavBar";
 import Image from 'next/image';
 
-
-// Componente de Carregamento
 function Loading() {
-  return <div>Loading...</div>;
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
 }
 
-// Seu componente DetailPage
 function DetailPage() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [shirt, setShirt] = useState<Shirt | null>(null);
   const searchParams = useSearchParams();
-  const search = searchParams.get('camisa');
+  const search = searchParams.get('camisa') ?? '';
 
   useEffect(() => {
     if (search) {
@@ -85,6 +87,8 @@ function DetailPage() {
           }
         } catch (error) {
           console.error("Erro ao buscar dados:", error);
+        } finally {
+          setIsLoading(false);
         }
       };
 
@@ -92,9 +96,8 @@ function DetailPage() {
     }
   }, [search]);
 
-  // Lançar uma promessa para simular um tempo de suspensão enquanto os dados estão sendo carregados
-  if (!shirt) {
-    throw new Promise<void>((resolve) => setTimeout(resolve, 2000));
+  if (isLoading || !shirt) {
+    return <Loading />;
   }
 
   return (
@@ -133,7 +136,6 @@ function DetailPage() {
   );
 }
 
-// Envolver o componente DetailPage com Suspense
 export default function SuspendedDetailPage() {
   return (
     <Suspense fallback={<Loading />}>
@@ -142,7 +144,6 @@ export default function SuspendedDetailPage() {
   );
 }
 
-// Sua definição de tipo para a camisa
 interface Shirt {
   id: string;
   name: string;
