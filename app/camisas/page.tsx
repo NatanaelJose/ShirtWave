@@ -17,13 +17,13 @@ interface Shirt {
 export default function Home() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const search = searchParams.get("camisa");
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const searchParams = useSearchParams();
-        const search = searchParams.get("camisa");
         
         if (search) {
           const shirtsData = [
