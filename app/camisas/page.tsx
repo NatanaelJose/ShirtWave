@@ -1,21 +1,18 @@
 "use client"
-import NavBar from "@/app/ui/Home/NavBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation'
+import NavBar from "@/app/ui/Home/NavBar";
 
-interface Shirt {
-  id: string;
-  name: string;
-  image_url: string;
-  price: number;
-  sizes: string[];
-  colors: string[];
+// Componente de Carregamento
+function Loading() {
+  return <div>Loading...</div>;
 }
 
-export default function Home() {
+// Seu componente DetailPage
+function DetailPage() {
   const [shirt, setShirt] = useState<Shirt | null>(null);
-  const searchParams = useSearchParams()
-  const search = searchParams.get('camisa')
+  const searchParams = useSearchParams();
+  const search = searchParams.get('camisa');
 
   useEffect(() => {
     if (search) {
@@ -93,8 +90,9 @@ export default function Home() {
     }
   }, [search]);
 
+  // Lançar uma promessa para simular um tempo de suspensão enquanto os dados estão sendo carregados
   if (!shirt) {
-    return <div>Loading...</div>;
+    throw new Promise<void>((resolve) => setTimeout(resolve, 2000));
   }
 
   return (
@@ -131,4 +129,23 @@ export default function Home() {
       </main>
     </div>
   );
+}
+
+// Envolver o componente DetailPage com Suspense
+export default function SuspendedDetailPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DetailPage />
+    </Suspense>
+  );
+}
+
+// Sua definição de tipo para a camisa
+interface Shirt {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+  sizes: string[];
+  colors: string[];
 }
